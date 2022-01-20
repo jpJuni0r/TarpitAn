@@ -1,0 +1,6 @@
+Connected: 323717
+Disconnected: 322580
+Time in total: 16:52:21
+Average: 01:37:43
+Longest in Tarpit: 05:47:47
+Shortest in Tarpit: 00:00:00

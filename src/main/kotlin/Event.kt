@@ -1,5 +1,4 @@
 import java.time.LocalDateTime
-import java.util.*
 
 data class Event(
     val timestamp: LocalDateTime,
@@ -9,29 +8,35 @@ data class Event(
 ) {
 
     companion object {
+
+        private const val sampleDateLength = "2021-01-01".length
+        private const val sampleTimeLength = "00:00:00".length
+        private const val sampleConnectedLength = "connected".length
+        private const val sampleUntilIpLength = "2021-05-27 00:47:41 INFO     TarpitServer: Client ('".length
+        private const val minIpLength = "0.0.0.0".length
+
+        private const val prefix = "2021-05-27 00:47:41 INFO     TarpitServer: Client ('"
+
         /**
          * Input: "2021-05-27 00:47:41 INFO     TarpitServer: Client ('154.160.0.156', 39171) connected"
          */
         fun fromLog(line: String): Event {
-            val scanner = Scanner(line)
+            val date = line.substring(0, sampleDateLength)
+            val time = line.substring(sampleDateLength + 1, sampleDateLength + 1 + sampleTimeLength)
 
-            val date = scanner.next()
-            val time = scanner.next()
+            val indexEndIp = line.indexOf('\'', startIndex = sampleUntilIpLength + minIpLength)
+            val ip = line.substring(sampleUntilIpLength, indexEndIp)
 
-            // Skip loglevel, "TarpitServer:", "Client",
-            for (i in 1..3) {
-                scanner.next()
+            val indexPortStart = indexEndIp + 3 // 3 == ", ".length + 1
+            val indexPortEnd = line.indexOf(')', startIndex = indexPortStart)
+            val port = line.substring(startIndex = indexPortStart, endIndex = indexPortEnd).toInt()
+
+
+            val type = if (line[line.length - sampleConnectedLength - 1] == ' ') {
+                EventType.CONNECTED
+            } else {
+                EventType.DISCONNECTED
             }
-
-            // "('61.177.173.9',"
-            val ipPart = scanner.next()
-            val ip = ipPart.substring(startIndex = 2, endIndex = ipPart.length - 2)
-
-            // "19762)"
-            val portPart = scanner.next()
-            val port = portPart.substring(startIndex = 0, endIndex = portPart.length - 1).toInt()
-
-            val type = EventType.fromString(scanner.next()) // "connected" or "disconnected"
 
             return Event(
                 timestamp = LocalDateTime.parse("${date}T$time"),

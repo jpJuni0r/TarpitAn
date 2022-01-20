@@ -29,6 +29,15 @@ internal class MainKtTest {
     }
 
     @Test
+    fun formatLogShortIp() {
+        val input = "2021-05-27 00:47:41 INFO     TarpitServer: Client ('1.2.3.4', 39171) connected"
+        val expected = createEvent(ip = "1.2.3.4")
+
+        val output = Event.fromLog(input)
+        output shouldBe expected
+    }
+
+    @Test
     fun stuckTime() {
         val events = listOf(
             createEvent(time = "12:00", type = EventType.CONNECTED),
@@ -37,7 +46,7 @@ internal class MainKtTest {
         val expected = "Time in seconds: 00:30:00"
 
         val s = StuckTime()
-        val output = s.evaluate(events.stream())
+        val output = s.evaluate(events)
         output shouldBe expected
     }
 

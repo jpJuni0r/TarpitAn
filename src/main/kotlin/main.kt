@@ -4,11 +4,10 @@ import java.io.File
 import java.io.PrintWriter
 import kotlin.system.measureTimeMillis
 
-val inputFileName = "tarpit.log"
-val resultFileName = "result2.txt"
+const val inputFileName = "tarpit.log"
+const val resultFileName = "result.txt"
 
-
-private fun main() = runBlocking<Unit> {
+private fun main() = runBlocking {
     val time = measureTimeMillis {
         val inputLog = File(System.getProperty("user.dir") + File.separator + inputFileName)
 
@@ -30,5 +29,3 @@ private fun main() = runBlocking<Unit> {
 
     println("Completed in $time ms")
 }
-
-

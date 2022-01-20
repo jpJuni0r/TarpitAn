@@ -4,10 +4,8 @@ import Event
 import EventType
 import java.time.Duration
 import java.util.stream.Collectors
-import java.util.stream.Stream
 
 class StuckTime : Statistic {
-
 
     override fun evaluate(events: List<Event>): String {
         val durations = events
